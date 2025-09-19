@@ -4,17 +4,12 @@
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="mapa" href="/tabs/mapa">
-          <ion-icon aria-hidden="true" :icon="triangle" />
+          <ion-icon aria-hidden="true" :icon="square" />
           <ion-label>Mapa</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="NovoPonto" href="/tabs/novo-ponto">
-          <ion-icon aria-hidden="true" :icon="ellipse" />
-          <ion-label>Adicionar Ponto </ion-label>
-        </ion-tab-button>
-
-        <ion-tab-button tab="Ranking" href="/tabs/Ranking">
-          <ion-icon aria-hidden="true" :icon="square" />
+        <ion-tab-button tab="ranking" href="/tabs/ranking">
+          <ion-icon aria-hidden="true" :icon="triangle" />
           <ion-label>Ranking</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
