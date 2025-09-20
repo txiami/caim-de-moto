@@ -1,0 +1,7 @@
+{
+  "name": "CaimDeMoto",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
