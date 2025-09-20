@@ -2,6 +2,9 @@
   <ion-header>
     <ion-toolbar>
       <ion-title>Caim de Moto</ion-title>
+          <ion-buttons slot="end">
+            <ion-button @click="goToLogin"> Entrar </ion-button>
+        </ion-buttons>
     </ion-toolbar>
   </ion-header>
   <ion-header collapse="condense">
@@ -11,7 +14,15 @@
   </ion-header>
 </template>
 
-<script setup lang="ts">
-import {  IonHeader, IonToolbar, IonTitle } from '@ionic/vue';
+<script>
+
+export default {
+  name: 'ToolsBar',
+  methods: {
+    goToLogin() {
+      this.$router.push('/login');
+    }
+  }
+}
 
 </script>

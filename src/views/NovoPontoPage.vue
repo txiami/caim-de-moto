@@ -1,5 +1,8 @@
 <template>
   <ion-page>
+
+     <ToolBar />
+
     <ion-content :fullscreen="true">
       <div id="container">
         <p>teste area de ponto <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
@@ -10,6 +13,8 @@
 
 <script setup lang="ts">
 import { IonPage, IonContent } from '@ionic/vue';
+import ToolBar from '@/components/ToolBar.vue';
+
 </script>
 
 <style scoped>
