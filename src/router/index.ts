@@ -17,17 +17,10 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'mapa',
-        name: 'mapa',
         component: () => import('@/views/MapaPage.vue')
       },
       {
-        path: 'novo-ponto',
-        name: 'NovoPonto',
-        component: () => import('@/views/NovoPontoPage.vue')
-      },
-      {
-        path: 'Ranking',
-        name: 'Ranking',
+        path: 'ranking',
         component: () => import('@/views/RankingPage.vue')
       }
     ]
