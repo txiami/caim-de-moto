@@ -2,7 +2,7 @@
     <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-img src="/public/assets/Logo.svg" alt="Logo" class="logo"></ion-img>
+        <ion-img src="/public/assets/icons/Logo.svg" alt="Logo" class="logo"></ion-img>
       </ion-buttons>
       <ion-title>Caim de Moto</ion-title>
       <ion-buttons slot="end">
@@ -27,6 +27,12 @@ export default {
 
 
 <style>
+
+ion-toolbar {
+  --background: #191919;
+  --color: #ffffff; /* Isso muda a cor do texto do título e dos botões para branco, garantindo a legibilidade */
+}
+
 
 .logo {
   width: 50px;  

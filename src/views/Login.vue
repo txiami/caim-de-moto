@@ -1,18 +1,21 @@
 <template>
 
-    <ion-header>
-    <ion-toolbar>
-      <ion-title slot="end">Login</ion-title>
-          <ion-buttons slot="start">
-            <ion-button  @click="goBack">Voltar </ion-button>
-        </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
+<ion-header>
+  <ion-toolbar>
+    <ion-title slot="end">Login</ion-title>
+<ion-buttons slot="start">
+  <ion-button @click="goBack">
+    <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+    Voltar
+  </ion-button>
+</ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
   <ion-content class="ion-padding">
 
             <div class="ion-text-center ion-margin-bottom">
-              <img src="/assets/Logo.svg" alt="Logo" class="logo">
+              <img src="/public/assets/icons/Logo.svg" alt="Logo" class="logo">
             </div>
   
             <ion-grid>
@@ -87,18 +90,21 @@
 
 </style>
 
-<script>
+<script setup>
+import { useRouter } from 'vue-router';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline } from 'ionicons/icons';
 
-  export default {
-    name: 'Login',
-    methods: {
-      goBack() {
-        this.$router.back(); 
-      },
-      goToCadastro() {
-        this.$router.push('/cadastro');
-      }
-    }
-  }
+// Registra o ícone para ser usado no template
+addIcons({ 'arrow-back-outline': arrowBackOutline });
 
+const router = useRouter();
+
+const goBack = () => {
+  router.back();
+};
+
+const goToCadastro = () => {
+  router.push('/cadastro');
+};
 </script>
