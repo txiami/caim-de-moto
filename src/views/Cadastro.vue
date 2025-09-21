@@ -12,7 +12,7 @@
         <ion-content class="ion-padding">
 
             <div class="ion-text-center ion-margin-bottom">
-                <ion-img src="/src/assets/Logo.svg" alt="Logo" class="logo"></ion-img>
+                <ion-img src="/public/assets/Logo.svg" alt="Logo" class="logo"></ion-img>
             </div>
 
             <ion-grid>

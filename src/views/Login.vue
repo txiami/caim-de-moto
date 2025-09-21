@@ -11,9 +11,9 @@
 
   <ion-content class="ion-padding">
 
-         <div class="ion-text-center ion-margin-bottom">
-            <ion-img src="/src/assets/Logo.svg" alt="Logo" class="logo"></ion-img>
-        </div>
+            <div class="ion-text-center ion-margin-bottom">
+              <img src="/assets/Logo.svg" alt="Logo" class="logo">
+            </div>
   
             <ion-grid>
 
@@ -53,9 +53,9 @@
           <ion-row class="ion-justify-content-center">
             <ion-col size="12" class="ion-text-center">
           
-            <p>
+            <p class="link-cadastro">
                 Não possui cadastro ainda?
-                <ion-button @click="goToCadastro" fill="clear" size="small" class="link-cadastro">
+                <ion-button @click="goToCadastro" fill="clear" size="small" >
                   Clique aqui
                 </ion-button>
                 e se cadastre
@@ -80,7 +80,7 @@
 }
 
 .logo {
-  width: 120px;  
+  width: 120px;
   height: auto;   
   margin: 0 auto; 
 }
@@ -93,7 +93,7 @@
     name: 'Login',
     methods: {
       goBack() {
-        this.$router.push('/tabs/mapa'); 
+        this.$router.back(); 
       },
       goToCadastro() {
         this.$router.push('/cadastro');
