@@ -5,12 +5,13 @@ import { getStorage } from "firebase/storage";
 
 // Configuração do projeto Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyCJFvkfOsvMJ3du24bu_op98rz6QpUK8n4",
-  authDomain: "caimdemoto1.firebaseapp.com",
-  projectId: "caimdemoto1",
-  storageBucket: "caimdemoto1.firebasestorage.app",
-  messagingSenderId: "857015826530",
-  appId: "1:857015826530:web:48448aa3698ed8267bb93b"
+  apiKey: "AIzaSyDSSuZIRUBd1yq7XRyExLVKQTt_0OKGjBA",
+  authDomain: "caimdemotodb.firebaseapp.com",
+  projectId: "caimdemotodb",
+  storageBucket: "caimdemotodb.firebasestorage.app",
+  messagingSenderId: "1050215525365",
+  appId: "1:1050215525365:web:56827652cdcf0f2363cebc",
+  measurementId: "G-0Y60TH6M8D"
 };
 
 // Inicializa Firebase
