@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import TabsPage from '@/components/TabsPage.vue';
-import Login from '../views/Login.vue';
-import Cadastro from '../views/Cadastro.vue';
-import MapaPage from '../views/MapaPage.vue';
-import NovoPontoPage from '@/views/NovoPontoPage.vue';
+import LoginPage from '@/views/LoginPage.vue';
+import CadastroPage from '@/views/CadastroPage.vue';
+import MapaPage from '@/views/MapaPage.vue';
 import RankingPage from '@/views/RankingPage.vue';
 
 const routes = [
@@ -13,12 +12,11 @@ const routes = [
     component: TabsPage,
     children: [
       { path: 'mapa', component: MapaPage },
-      { path: 'novo-ponto', component: NovoPontoPage },
       { path: 'ranking', component: RankingPage }
     ]
   },
-  { path: '/login', component: Login },
-  { path: '/cadastro', component: Cadastro }
+  { path: '/login', component: LoginPage },
+  { path: '/cadastro', component: CadastroPage }
 ];
 
 const router = createRouter({

@@ -1,24 +1,13 @@
 <template>
   <ion-page>
-
-
     <ion-tabs>
-
-              <ion-router-outlet></ion-router-outlet>
-
-
+      <ion-router-outlet></ion-router-outlet>
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="mapa" href="/tabs/mapa">
           <ion-icon aria-hidden="true" :icon="triangle" />
           <ion-label>Mapa</ion-label>
         </ion-tab-button>
-
-        <ion-tab-button tab="NovoPonto" href="/tabs/novo-ponto">
-          <ion-icon aria-hidden="true" :icon="ellipse" />
-          <ion-label>Adicionar Ponto </ion-label>
-        </ion-tab-button>
-
         <ion-tab-button tab="Ranking" href="/tabs/Ranking">
           <ion-icon aria-hidden="true" :icon="square" />
           <ion-label>Ranking</ion-label>
@@ -30,5 +19,5 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import { ellipse, square, triangle } from 'ionicons/icons';
+import {square, triangle } from 'ionicons/icons';
 </script>
