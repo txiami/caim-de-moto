@@ -3,20 +3,19 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-// Configuração do projeto Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyCJFvkfOsvMJ3du24bu_op98rz6QpUK8n4",
-  authDomain: "caimdemoto1.firebaseapp.com",
-  projectId: "caimdemoto1",
-  storageBucket: "caimdemoto1.firebasestorage.app",
-  messagingSenderId: "857015826530",
-  appId: "1:857015826530:web:48448aa3698ed8267bb93b"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 // Inicializa Firebase
 const app = initializeApp(firebaseConfig);
 
-// Exporta serviços que vai usar no app
+// Exporta serviços
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);

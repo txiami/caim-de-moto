@@ -20,8 +20,9 @@
     "@capacitor/keyboard": "7.0.3",
     "@capacitor/status-bar": "7.0.3",
     "@googlemaps/js-api-loader": "^1.16.10",
-    "@ionic/vue": "^8.0.0",
-    "@ionic/vue-router": "^8.0.0",
+    "@ionic/vue": "^8.7.4",
+    "@ionic/vue-router": "^8.7.4",
+    "firebase": "^12.3.0",
     "ionicons": "^7.0.0",
     "vue": "^3.3.0",
     "vue-router": "^4.2.0"
