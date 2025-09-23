@@ -12,7 +12,7 @@
     </ion-header>
     
     <ion-content :fullscreen="true">
-      <!-- Barra de busca -->
+
       <div class="search-container">
         <ion-searchbar
           v-model="buscaTexto"
