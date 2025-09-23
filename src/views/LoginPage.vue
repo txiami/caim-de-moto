@@ -21,6 +21,7 @@
         <ion-row>
           <ion-col size="12">
             <ion-input
+                v-model="email"
                 label="Login"
                 label-placement="floating"
                 fill="outline"
@@ -33,6 +34,7 @@
         <ion-row>
           <ion-col size="12">
             <ion-input
+                v-model="senha"
                 type="password"
                 label="Senha"
                 label-placement="floating"
@@ -45,7 +47,7 @@
 
         <ion-row class="ion-justify-content-center">
           <ion-col size="10" size-md="6">
-            <ion-button expand="block" class="ion-margin">
+            <ion-button expand="block" class="ion-margin" @click="login">
               Entrar
             </ion-button>
           </ion-col>
@@ -66,6 +68,8 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import {
   IonPage,
   IonHeader,
@@ -81,21 +85,36 @@ import {
   IonImg,
   IonIcon
 } from '@ionic/vue';
-import { useRouter } from 'vue-router';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/firebase'; // seu arquivo de configuração do Firebase
 
-// Registra o ícone para ser usado no template
+// Registra o ícone
 addIcons({ 'arrow-back-outline': arrowBackOutline });
 
 const router = useRouter();
+const email = ref('');
+const senha = ref('');
 
 const goBack = () => {
-  router.push('/tabs/mapa');
+  router.push('/tabs/mapa'); // rota de retorno
 };
 
 const goToCadastro = () => {
   router.push('/cadastro');
+};
+
+const login = async () => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email.value, senha.value);
+    console.log('Usuário logado:', userCredential.user);
+    alert('Login realizado com sucesso!');
+    router.push('/tabs/mapa'); // rota pós-login
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
 };
 </script>
 

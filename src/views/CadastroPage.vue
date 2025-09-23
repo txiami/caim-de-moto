@@ -18,6 +18,7 @@
         <ion-row>
           <ion-col size="12">
             <ion-input
+                v-model="nome"
                 label="Nome Completo"
                 label-placement="floating"
                 fill="outline"
@@ -30,6 +31,7 @@
         <ion-row>
           <ion-col size="12">
             <ion-input
+                v-model="email"
                 type="email"
                 label="Email"
                 label-placement="floating"
@@ -43,6 +45,7 @@
         <ion-row>
           <ion-col size="12">
             <ion-input
+                v-model="senha"
                 type="password"
                 label="Senha"
                 label-placement="floating"
@@ -56,6 +59,7 @@
         <ion-row>
           <ion-col size="12">
             <ion-input
+                v-model="confirmarSenha"
                 type="password"
                 label="Confirme sua senha"
                 label-placement="floating"
@@ -68,7 +72,7 @@
 
         <ion-row class="ion-justify-content-center">
           <ion-col size="10" size-md="6">
-            <ion-button expand="block" class="ion-margin">
+            <ion-button expand="block" class="ion-margin" @click="cadastrar">
               Cadastrar
             </ion-button>
           </ion-col>
@@ -93,6 +97,8 @@ import {
   IonInput,
   IonImg
 } from '@ionic/vue';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/firebase'; // seu arquivo de configuração do Firebase
 
 export default {
   name: "Cadastro",
@@ -110,9 +116,32 @@ export default {
     IonInput,
     IonImg
   },
+  data() {
+    return {
+      nome: '',
+      email: '',
+      senha: '',
+      confirmarSenha: ''
+    };
+  },
   methods: {
     goBack() {
       this.$router.push('/login');
+    },
+    async cadastrar() {
+      if (this.senha !== this.confirmarSenha) {
+        alert('Senhas não conferem!');
+        return;
+      }
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, this.email, this.senha);
+        console.log('Usuário criado:', userCredential.user);
+        alert('Cadastro realizado com sucesso!');
+        this.$router.push('/login');
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+      }
     }
   }
 }
