@@ -1,7 +1,3 @@
-// Importa os tipos do Google Maps
-/// <reference types="@types/google.maps" />
-declare const google: typeof google;
-
 import { Loader } from "@googlemaps/js-api-loader";
 import type { Coordenadas, PontoRisco } from "@/types";
 import { configMapa } from "@/config";
@@ -39,7 +35,7 @@ export class MapaService {
       const loader = new Loader({
         apiKey: configMapa.chaveApi,
         version: "weekly",
-        libraries: [...configMapa.bibliotecas, "places"], // Biblioteca 'places' adicionada
+        libraries: ["places"]
       });
 
       await loader.load();
@@ -161,7 +157,7 @@ export class MapaService {
         position: ponto.coordenadas,
         map: this.mapa!,
         icon: obterIconeRisco(ponto.tipo),
-        title: ponto.descricao || `Risco: ${ponto.tipo}`,
+        title: `Risco: ${ponto.tipo}`,
         animation: google.maps.Animation.DROP,
       });
 

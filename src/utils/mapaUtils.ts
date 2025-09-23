@@ -78,17 +78,16 @@ export const formatarCoordenadas = (coords: Coordenadas): string => {
 export const converterCoordenadasGoogleMaps = (
     latLng: google.maps.LatLng | google.maps.LatLngLiteral
 ): Coordenadas => {
-  if (latLng instanceof google.maps.LatLng) {
-    return {
-      lat: latLng.lat(),
-      lng: latLng.lng()
-    };
+  if ("lat" in latLng && typeof latLng.lat === "function") {
+    // Cast explícito para função
+    return { lat: (latLng.lat as () => number)(), lng: (latLng.lng as () => number)() };
+  } else {
+    const literal = latLng as google.maps.LatLngLiteral;
+    return { lat: literal.lat, lng: literal.lng };
   }
-  return {
-    lat: latLng.lat,
-    lng: latLng.lng
-  };
 };
+
+
 
 /**
  * Cria conteúdo HTML para InfoWindow
@@ -154,7 +153,7 @@ export const debounce = <T extends (...args: any[]) => any>(
     func: T,
     espera: number
 ): ((...args: Parameters<T>) => void) => {
-  let timeout: NodeJS.Timeout;
+  let timeout: ReturnType<typeof setTimeout>;
 
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
@@ -219,7 +218,9 @@ class CacheSimples<K, V> {
     if (this.cache.size >= this.tamanhoMaximo) {
       // Remove o primeiro item (mais antigo)
       const primeiraChave = this.cache.keys().next().value;
-      this.cache.delete(primeiraChave);
+      if (primeiraChave !== undefined) {
+        this.cache.delete(primeiraChave);
+      }
     }
     this.cache.set(chave, valor);
   }
