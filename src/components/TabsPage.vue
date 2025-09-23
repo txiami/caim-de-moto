@@ -1,12 +1,7 @@
 <template>
   <ion-page>
-
-
     <ion-tabs>
-
-              <ion-router-outlet></ion-router-outlet>
-
-
+      <ion-router-outlet></ion-router-outlet>
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="mapa" href="/tabs/mapa">

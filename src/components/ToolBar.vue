@@ -24,8 +24,6 @@ export default {
 }
 
 </script>
-
-
 <style>
 
 ion-toolbar {
@@ -33,12 +31,9 @@ ion-toolbar {
   --color: #ffffff; /* Isso muda a cor do texto do título e dos botões para branco, garantindo a legibilidade */
 }
 
-
 .logo {
   width: 50px;  
   height: auto;   
   margin: 0 auto; 
 }
-
-
 </style>

@@ -92,7 +92,7 @@ import { ref, onMounted, onBeforeUnmount, nextTick,computed } from 'vue';
 import {
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
   IonSearchbar, IonButton, IonIcon, IonButtons, IonSpinner,
-  IonFab, IonFabButton, IonSegment, IonSegmentButton, IonLabel,
+  IonFab, IonFabButton, IonLabel,
   IonChip, toastController, alertController
 } from '@ionic/vue';
 import { search as buscar, locate as localizar, add as adicionar, location as iconeLocalizacao } from 'ionicons/icons';

@@ -1,20 +1,19 @@
 declare const google: any;
 
-import type { TipoRisco, Coordenadas, PontoRisco } from '@/types';
+import type { TipoRisco, Coordenadas, PontoRisco, ConfigUI } from '@/types';
 import { urlsIcones, configUI, labelsTipoRisco, coresTipoRisco } from '@/config';
-
 
 /**
  * Obtém o ícone apropriado para cada tipo de risco
  */
 export const obterIconeRisco = (tipo: TipoRisco): google.maps.Icon => {
   const nomeArquivoIcone = urlsIcones.marcadores[tipo] || urlsIcones.marcadores.outro;
-  
+
   return {
     url: urlsIcones.base + nomeArquivoIcone,
     scaledSize: new google.maps.Size(
-      configUI.tamanhosMarcadores.medio.width,
-      configUI.tamanhosMarcadores.medio.height
+        configUI.tamanhosMarcadores.medio.width,
+        configUI.tamanhosMarcadores.medio.height
     )
   };
 };
@@ -26,8 +25,8 @@ export const obterIconeLocalizacaoAtual = (): google.maps.Icon => {
   return {
     url: urlsIcones.base + urlsIcones.marcadores.localizacaoAtual,
     scaledSize: new google.maps.Size(
-      configUI.tamanhosMarcadores.grande.width,
-      configUI.tamanhosMarcadores.grande.height
+        configUI.tamanhosMarcadores.grande.width,
+        configUI.tamanhosMarcadores.grande.height
     )
   };
 };
@@ -39,8 +38,8 @@ export const obterIconeResultadoBusca = (): google.maps.Icon => {
   return {
     url: urlsIcones.base + urlsIcones.marcadores.resultadoBusca,
     scaledSize: new google.maps.Size(
-      configUI.tamanhosMarcadores.medio.width,
-      configUI.tamanhosMarcadores.medio.height
+        configUI.tamanhosMarcadores.medio.width,
+        configUI.tamanhosMarcadores.medio.height
     )
   };
 };
@@ -49,19 +48,19 @@ export const obterIconeResultadoBusca = (): google.maps.Icon => {
  * Calcula distância entre dois pontos usando fórmula Haversine
  */
 export const calcularDistancia = (
-  ponto1: Coordenadas,
-  ponto2: Coordenadas
+    ponto1: Coordenadas,
+    ponto2: Coordenadas
 ): number => {
   const R = 6371; // Raio da Terra em km
   const dLat = (ponto2.lat - ponto1.lat) * Math.PI / 180;
   const dLng = (ponto2.lng - ponto1.lng) * Math.PI / 180;
-  
+
   const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(ponto1.lat * Math.PI / 180) *
-    Math.cos(ponto2.lat * Math.PI / 180) *
-    Math.sin(dLng / 2) * Math.sin(dLng / 2);
-  
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(ponto1.lat * Math.PI / 180) *
+      Math.cos(ponto2.lat * Math.PI / 180) *
+      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 };
@@ -77,7 +76,7 @@ export const formatarCoordenadas = (coords: Coordenadas): string => {
  * Converte coordenadas do Google Maps para nosso formato
  */
 export const converterCoordenadasGoogleMaps = (
-  latLng: google.maps.LatLng | google.maps.LatLngLiteral
+    latLng: google.maps.LatLng | google.maps.LatLngLiteral
 ): Coordenadas => {
   if (latLng instanceof google.maps.LatLng) {
     return {
@@ -104,42 +103,17 @@ export const criarConteudoInfoWindow = (ponto: PontoRisco): string => {
         🚨 ${labelTipo}
       </h4>
       
-      ${ponto.descricao ? `
-        <div style="margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 4px;">
-          <strong style="color: #495057;">📝 Descrição:</strong>
-          <p style="margin: 4px 0 0 0; color: #6c757d; font-size: 14px; line-height: 1.4;">
-            ${ponto.descricao}
-          </p>
-        </div>
-      ` : ''}
-      
       <div style="margin: 8px 0; display: flex; align-items: center; gap: 8px;">
         <span style="color: #495057; font-size: 14px;">
           <strong>👤 Reportado por:</strong> ${ponto.nomeUsuario}
         </span>
       </div>
       
-      ${ponto.votos !== undefined ? `
-        <div style="margin: 8px 0; display: flex; align-items: center; gap: 8px;">
-          <span style="color: #28a745; font-size: 14px; display: flex; align-items: center; gap: 4px;">
-            <strong>👍 Confirmações:</strong> ${ponto.votos || 0}
-          </span>
-        </div>
-      ` : ''}
-      
       <div style="margin: 12px 0 0 0; padding-top: 8px; border-top: 1px solid #dee2e6;">
         <span style="color: #6c757d; font-size: 12px;">
-          📅 ${formatarDataHora(ponto.criadoEm)}
+          📍 ${formatarCoordenadas(ponto.coordenadas)}
         </span>
       </div>
-      
-      ${ponto.status && ponto.status !== 'ativo' ? `
-        <div style="margin-top: 8px; padding: 6px 10px; background: ${ponto.status === 'resolvido' ? '#d4edda' : '#fff3cd'}; 
-             border: 1px solid ${ponto.status === 'resolvido' ? '#c3e6cb' : '#ffeaa7'}; 
-             border-radius: 4px; font-size: 12px; color: ${ponto.status === 'resolvido' ? '#155724' : '#856404'};">
-          <strong>Status:</strong> ${ponto.status === 'resolvido' ? '✅ Resolvido' : '🔍 Em Análise'}
-        </div>
-      ` : ''}
     </div>
   `;
 };
@@ -153,14 +127,14 @@ export const formatarDataHora = (data: Date): string => {
   const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
 
   if (dias === 0) {
-    return `Hoje às ${data.toLocaleTimeString('pt-BR', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return `Hoje às ${data.toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit'
     })}`;
   } else if (dias === 1) {
-    return `Ontem às ${data.toLocaleTimeString('pt-BR', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return `Ontem às ${data.toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit'
     })}`;
   } else if (dias < 7) {
     return `${dias} dias atrás`;
@@ -177,11 +151,11 @@ export const formatarDataHora = (data: Date): string => {
  * Função debounce para otimizar busca
  */
 export const debounce = <T extends (...args: any[]) => any>(
-  func: T,
-  espera: number
+    func: T,
+    espera: number
 ): ((...args: Parameters<T>) => void) => {
   let timeout: NodeJS.Timeout;
-  
+
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => func.apply(null, args), espera);
@@ -192,9 +166,9 @@ export const debounce = <T extends (...args: any[]) => any>(
  * Verifica se as coordenadas estão dentro de um raio
  */
 export const estaDentroDoRaio = (
-  centro: Coordenadas,
-  ponto: Coordenadas,
-  raioKm: number
+    centro: Coordenadas,
+    ponto: Coordenadas,
+    raioKm: number
 ): boolean => {
   return calcularDistancia(centro, ponto) <= raioKm;
 };
@@ -204,11 +178,11 @@ export const estaDentroDoRaio = (
  */
 export const obterBoundsParaPontos = (pontos: Coordenadas[]): google.maps.LatLngBounds => {
   const bounds = new google.maps.LatLngBounds();
-  
+
   pontos.forEach(ponto => {
     bounds.extend(new google.maps.LatLng(ponto.lat, ponto.lng));
   });
-  
+
   return bounds;
 };
 
@@ -270,14 +244,14 @@ export const cacheGeocodificacao = new CacheSimples<string, google.maps.Geocoder
  */
 export const validarCoordenadas = (coords: Coordenadas): boolean => {
   return (
-    typeof coords.lat === 'number' &&
-    typeof coords.lng === 'number' &&
-    coords.lat >= -90 &&
-    coords.lat <= 90 &&
-    coords.lng >= -180 &&
-    coords.lng <= 180 &&
-    !isNaN(coords.lat) &&
-    !isNaN(coords.lng)
+      typeof coords.lat === 'number' &&
+      typeof coords.lng === 'number' &&
+      coords.lat >= -90 &&
+      coords.lat <= 90 &&
+      coords.lng >= -180 &&
+      coords.lng <= 180 &&
+      !isNaN(coords.lat) &&
+      !isNaN(coords.lng)
   );
 };
 
@@ -292,4 +266,43 @@ export const formatarDistancia = (distanciaKm: number): string => {
   } else {
     return `${Math.round(distanciaKm)}km`;
   }
+};
+
+/**
+ * Obtém bounds para centralizar um ponto com raio
+ */
+export const obterBoundsParaPonto = (
+    centro: Coordenadas,
+    raioKm: number
+): google.maps.LatLngBounds => {
+  const latOffset = raioKm / 111; // Aproximadamente 111km por grau de latitude
+  const lngOffset = raioKm / (111 * Math.cos(centro.lat * Math.PI / 180));
+
+  return new google.maps.LatLngBounds(
+      new google.maps.LatLng(centro.lat - latOffset, centro.lng - lngOffset),
+      new google.maps.LatLng(centro.lat + latOffset, centro.lng + lngOffset)
+  );
+};
+
+/**
+ * Filtra pontos por tipo de risco
+ */
+export const filtrarPontosPorTipo = (
+    pontos: PontoRisco[],
+    tipos: TipoRisco[]
+): PontoRisco[] => {
+  return pontos.filter(ponto => tipos.includes(ponto.tipo));
+};
+
+/**
+ * Obtém pontos próximos a uma localização
+ */
+export const obterPontosProximos = (
+    pontos: PontoRisco[],
+    centro: Coordenadas,
+    raioKm: number
+): PontoRisco[] => {
+  return pontos.filter(ponto =>
+      estaDentroDoRaio(centro, ponto.coordenadas, raioKm)
+  );
 };
