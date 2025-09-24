@@ -1,17 +1,13 @@
-// Importa os tipos do Google Maps
-/// <reference types="@types/google.maps" />
-declare const google: typeof google;
-
-import { Loader } from '@googlemaps/js-api-loader';
-import type { Coordenadas, PontoRisco } from '@/types';
-import { configMapa } from '@/config';
-import { 
-  obterIconeRisco, 
-  obterIconeLocalizacaoAtual, 
+import { Loader } from "@googlemaps/js-api-loader";
+import type { Coordenadas, PontoRisco } from "@/types";
+import { configMapa } from "@/config";
+import {
+  obterIconeRisco,
+  obterIconeLocalizacaoAtual,
   obterIconeResultadoBusca,
   criarConteudoInfoWindow,
-  cacheGeocodificacao
-} from '@/utils/mapaUtils';
+  cacheGeocodificacao,
+} from "@/utils/mapaUtils";
 
 export class MapaService {
   private mapa: google.maps.Map | null = null;
@@ -20,24 +16,26 @@ export class MapaService {
   private marcadorLocalizacaoAtual: google.maps.Marker | null = null;
   private infoWindowsAbertas: google.maps.InfoWindow[] = [];
   private inicializado = false;
+  private autocompleteService: google.maps.places.AutocompleteService | null =
+    null;
 
   /**
    * Inicializa o Google Maps
    */
   async inicializar(container: HTMLElement): Promise<void> {
     if (this.inicializado) {
-      throw new Error('MapaService já foi inicializado');
+      throw new Error("MapaService já foi inicializado");
     }
 
     if (!configMapa.chaveApi) {
-      throw new Error('Chave da API do Google Maps não configurada');
+      throw new Error("Chave da API do Google Maps não configurada");
     }
 
     try {
       const loader = new Loader({
         apiKey: configMapa.chaveApi,
-        version: 'weekly',
-        libraries: configMapa.bibliotecas
+        version: "weekly",
+        libraries: ["places"]
       });
 
       await loader.load();
@@ -53,19 +51,53 @@ export class MapaService {
         fullscreenControl: false,
         zoomControl: true,
         zoomControlOptions: {
-          position: google.maps.ControlPosition.RIGHT_BOTTOM
-        }
+          position: google.maps.ControlPosition.RIGHT_BOTTOM,
+        },
       });
 
       // Inicializar geocoder
       this.geocoder = new google.maps.Geocoder();
-
+      this.autocompleteService = new google.maps.places.AutocompleteService();
       this.inicializado = true;
-
     } catch (error) {
-      console.error('Erro ao inicializar MapaService:', error);
+      console.error("Erro ao inicializar MapaService:", error);
       throw error;
     }
+  }
+
+  async obterSugestoesDeEndereco(
+    input: string
+  ): Promise<google.maps.places.AutocompletePrediction[]> {
+    if (!this.autocompleteService) {
+      throw new Error("AutocompleteService não inicializado");
+    }
+    if (!input.trim()) {
+      return [];
+    }
+
+    return new Promise((resolve, reject) => {
+      this.autocompleteService!.getPlacePredictions(
+        {
+          input: input,
+          componentRestrictions: { country: "br" }, // Prioriza resultados no Brasil
+        },
+        (predictions, status) => {
+          if (
+            status === google.maps.places.PlacesServiceStatus.OK &&
+            predictions
+          ) {
+            resolve(predictions);
+          } else if (
+            status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS
+          ) {
+            resolve([]); // Retorna array vazio se não houver resultados
+          } else {
+            console.error(`Autocomplete falhou: ${status}`);
+            reject(new Error("Erro ao buscar sugestões."));
+          }
+        }
+      );
+    });
   }
 
   /**
@@ -73,7 +105,7 @@ export class MapaService {
    */
   obterMapa(): google.maps.Map {
     if (!this.mapa) {
-      throw new Error('MapaService não foi inicializado');
+      throw new Error("MapaService não foi inicializado");
     }
     return this.mapa;
   }
@@ -84,18 +116,18 @@ export class MapaService {
   private obterEstilosMapa(): google.maps.MapTypeStyle[] {
     return [
       {
-        featureType: 'poi',
-        stylers: [{ visibility: 'off' }]
+        featureType: "poi",
+        stylers: [{ visibility: "off" }],
       },
       {
-        featureType: 'transit',
-        stylers: [{ visibility: 'simplified' }]
+        featureType: "transit",
+        stylers: [{ visibility: "simplified" }],
       },
       {
-        featureType: 'road',
-        elementType: 'labels',
-        stylers: [{ visibility: 'on' }]
-      }
+        featureType: "road",
+        elementType: "labels",
+        stylers: [{ visibility: "on" }],
+      },
     ];
   }
 
@@ -104,7 +136,7 @@ export class MapaService {
    */
   centralizarMapa(coordenadas: Coordenadas, zoom?: number): void {
     if (!this.mapa) return;
-    
+
     this.mapa.setCenter(coordenadas);
     if (zoom) {
       this.mapa.setZoom(zoom);
@@ -125,16 +157,16 @@ export class MapaService {
         position: ponto.coordenadas,
         map: this.mapa!,
         icon: obterIconeRisco(ponto.tipo),
-        title: ponto.descricao || `Risco: ${ponto.tipo}`,
-        animation: google.maps.Animation.DROP
+        title: `Risco: ${ponto.tipo}`,
+        animation: google.maps.Animation.DROP,
       });
 
       // InfoWindow
       const infoWindow = new google.maps.InfoWindow({
-        content: criarConteudoInfoWindow(ponto)
+        content: criarConteudoInfoWindow(ponto),
       });
 
-      marcador.addListener('click', () => {
+      marcador.addListener("click", () => {
         // Fechar outras info windows
         this.fecharTodasInfoWindows();
         infoWindow.open(this.mapa!, marcador);
@@ -149,7 +181,7 @@ export class MapaService {
    * Limpa marcadores de risco
    */
   limparMarcadoresRisco(): void {
-    this.marcadores.forEach(marcador => marcador.setMap(null));
+    this.marcadores.forEach((marcador) => marcador.setMap(null));
     this.marcadores = [];
     this.fecharTodasInfoWindows();
   }
@@ -170,9 +202,9 @@ export class MapaService {
       position: coordenadas,
       map: this.mapa,
       icon: obterIconeLocalizacaoAtual(),
-      title: 'Sua localização atual',
+      title: "Sua localização atual",
       zIndex: 1000,
-      animation: google.maps.Animation.BOUNCE
+      animation: google.maps.Animation.BOUNCE,
     });
 
     // Para a animação após 2 segundos
@@ -186,9 +218,11 @@ export class MapaService {
   /**
    * Busca endereço usando Geocoding API
    */
-  async buscarEndereco(endereco: string): Promise<google.maps.GeocoderResult[]> {
+  async buscarEndereco(
+    endereco: string
+  ): Promise<google.maps.GeocoderResult[]> {
     if (!this.geocoder) {
-      throw new Error('Geocoder não inicializado');
+      throw new Error("Geocoder não inicializado");
     }
 
     const enderecoLimpo = endereco.trim().toLowerCase();
@@ -200,18 +234,22 @@ export class MapaService {
 
     return new Promise((resolve, reject) => {
       this.geocoder!.geocode(
-        { 
+        {
           address: endereco,
-          region: 'BR' // Priorizar resultados do Brasil
-        }, 
+          region: "BR", // Priorizar resultados do Brasil
+        },
         (results, status) => {
-          if (status === 'OK' && results) {
+          if (status === "OK" && results) {
             // Salvar no cache
             cacheGeocodificacao.definir(enderecoLimpo, results);
             resolve(results);
           } else {
             console.error(`Geocoding falhou: ${status}`);
-            reject(new Error(`Falha na busca: ${this.obterMensagemErroGeocode(status)}`));
+            reject(
+              new Error(
+                `Falha na busca: ${this.obterMensagemErroGeocode(status)}`
+              )
+            );
           }
         }
       );
@@ -224,24 +262,28 @@ export class MapaService {
   private obterMensagemErroGeocode(status: google.maps.GeocoderStatus): string {
     switch (status) {
       case google.maps.GeocoderStatus.ZERO_RESULTS:
-        return 'Endereço não encontrado';
+        return "Endereço não encontrado";
       case google.maps.GeocoderStatus.OVER_QUERY_LIMIT:
-        return 'Limite de consultas excedido';
+        return "Limite de consultas excedido";
       case google.maps.GeocoderStatus.REQUEST_DENIED:
-        return 'Solicitação negada';
+        return "Solicitação negada";
       case google.maps.GeocoderStatus.INVALID_REQUEST:
-        return 'Solicitação inválida';
+        return "Solicitação inválida";
       case google.maps.GeocoderStatus.UNKNOWN_ERROR:
-        return 'Erro desconhecido';
+        return "Erro desconhecido";
       default:
-        return 'Erro na busca';
+        return "Erro na busca";
     }
   }
 
   /**
    * Adiciona marcador temporário para resultado de busca
    */
-  adicionarMarcadorBusca(coordenadas: Coordenadas, titulo: string, duracao: number = 10000): void {
+  adicionarMarcadorBusca(
+    coordenadas: Coordenadas,
+    titulo: string,
+    duracao: number = 10000
+  ): void {
     if (!this.mapa) return;
 
     const marcador = new google.maps.Marker({
@@ -249,7 +291,7 @@ export class MapaService {
       map: this.mapa,
       icon: obterIconeResultadoBusca(),
       title: `Resultado da busca: ${titulo}`,
-      animation: google.maps.Animation.DROP
+      animation: google.maps.Animation.DROP,
     });
 
     const infoWindow = new google.maps.InfoWindow({
@@ -258,7 +300,7 @@ export class MapaService {
           <h4 style="margin: 0 0 8px 0; color: #28a745;">📍 Local Encontrado</h4>
           <p style="margin: 0; color: #495057; font-size: 14px;">${titulo}</p>
         </div>
-      `
+      `,
     });
 
     // Abrir info window automaticamente
@@ -281,9 +323,9 @@ export class MapaService {
     const marcador = new google.maps.Marker({
       position: coordenadas,
       map: this.mapa,
-      icon: obterIconeRisco('buraco'),
-      title: 'Ponto de teste',
-      animation: google.maps.Animation.BOUNCE
+      icon: obterIconeRisco("buraco"),
+      title: "Ponto de teste",
+      animation: google.maps.Animation.BOUNCE,
     });
 
     const infoWindow = new google.maps.InfoWindow({
@@ -295,17 +337,19 @@ export class MapaService {
               <strong>Tipo:</strong> Buraco na via
             </p>
             <p style="margin: 4px 0; color: #495057; font-size: 14px;">
-              <strong>Coordenadas:</strong> ${coordenadas.lat.toFixed(6)}, ${coordenadas.lng.toFixed(6)}
+              <strong>Coordenadas:</strong> ${coordenadas.lat.toFixed(
+                6
+              )}, ${coordenadas.lng.toFixed(6)}
             </p>
             <p style="margin: 4px 0 0 0; color: #6c757d; font-size: 12px;">
               📅 Adicionado agora para teste
             </p>
           </div>
         </div>
-      `
+      `,
     });
 
-    marcador.addListener('click', () => {
+    marcador.addListener("click", () => {
       this.fecharTodasInfoWindows();
       infoWindow.open(this.mapa!, marcador);
       this.infoWindowsAbertas.push(infoWindow);
@@ -324,13 +368,13 @@ export class MapaService {
    */
   obterCentro(): Coordenadas | null {
     if (!this.mapa) return null;
-    
+
     const centro = this.mapa.getCenter();
     if (!centro) return null;
 
     return {
       lat: centro.lat(),
-      lng: centro.lng()
+      lng: centro.lng(),
     };
   }
 
@@ -348,8 +392,8 @@ export class MapaService {
     if (!this.mapa || this.marcadores.length === 0) return;
 
     const bounds = new google.maps.LatLngBounds();
-    
-    this.marcadores.forEach(marcador => {
+
+    this.marcadores.forEach((marcador) => {
       const position = marcador.getPosition();
       if (position) {
         bounds.extend(position);
@@ -367,19 +411,23 @@ export class MapaService {
     this.mapa.fitBounds(bounds);
 
     // Garantir zoom mínimo
-    const listener = google.maps.event.addListener(this.mapa, 'bounds_changed', () => {
-      if (this.mapa!.getZoom()! > 18) {
-        this.mapa!.setZoom(18);
+    const listener = google.maps.event.addListener(
+      this.mapa,
+      "bounds_changed",
+      () => {
+        if (this.mapa!.getZoom()! > 18) {
+          this.mapa!.setZoom(18);
+        }
+        google.maps.event.removeListener(listener);
       }
-      google.maps.event.removeListener(listener);
-    });
+    );
   }
 
   /**
    * Fecha todas as InfoWindows abertas
    */
   private fecharTodasInfoWindows(): void {
-    this.infoWindowsAbertas.forEach(infoWindow => {
+    this.infoWindowsAbertas.forEach((infoWindow) => {
       infoWindow.close();
     });
     this.infoWindowsAbertas = [];
@@ -391,11 +439,11 @@ export class MapaService {
   adicionarListenerClique(callback: (coordenadas: Coordenadas) => void): void {
     if (!this.mapa) return;
 
-    this.mapa.addListener('click', (evento: google.maps.MapMouseEvent) => {
+    this.mapa.addListener("click", (evento: google.maps.MapMouseEvent) => {
       if (evento.latLng) {
         const coordenadas: Coordenadas = {
           lat: evento.latLng.lat(),
-          lng: evento.latLng.lng()
+          lng: evento.latLng.lng(),
         };
         callback(coordenadas);
       }
@@ -407,7 +455,7 @@ export class MapaService {
    */
   limparTodosMarcadores(): void {
     this.limparMarcadoresRisco();
-    
+
     if (this.marcadorLocalizacaoAtual) {
       this.marcadorLocalizacaoAtual.setMap(null);
       this.marcadorLocalizacaoAtual = null;
@@ -425,7 +473,7 @@ export class MapaService {
       zoom: this.obterZoom(),
       totalMarcadores: this.marcadores.length,
       temLocalizacaoAtual: this.marcadorLocalizacaoAtual !== null,
-      inicializado: this.inicializado
+      inicializado: this.inicializado,
     };
   }
 
@@ -442,7 +490,7 @@ export class MapaService {
   destruir(): void {
     this.limparTodosMarcadores();
     this.fecharTodasInfoWindows();
-    
+
     if (this.mapa) {
       // Limpar todos os listeners
       google.maps.event.clearInstanceListeners(this.mapa);

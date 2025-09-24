@@ -1,25 +1,73 @@
 <template>
   <ion-page>
+    <ToolBar />
     <ion-content :fullscreen="true">
-      <div id="container">
-        <p>teste area de ranking <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-      </div>
+      <ion-grid class="ion-padding-top">
+        <ion-row class="ion-justify-content-center ion-margin-bottom ion-margin-top">
+          <ion-col size="12" size-md="8" class="ion-text-center">
+            <strong class="ranking-title">Ranking</strong>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="ion-justify-content-center">
+          <ion-col size="12" size-md="8">
+            <ion-list>
+              <ion-item v-for="(user, index) in ranking" :key="user.id">
+                <ion-label>
+                  <h2>
+                    <span v-if="index === 0">🥇</span>
+                    <span v-else-if="index === 1">🥈</span>
+                    <span v-else-if="index === 2">🥉</span>
+                    {{ index + 1 }}º - {{ user.name }}
+                  </h2>
+                  <p>{{ user.points }} locais adicionados</p>
+                </ion-label>
+                <ion-badge slot="end" color="primary">
+                  {{ user.points }}
+                </ion-badge>
+              </ion-item>
+            </ion-list>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-content>
   </ion-page>
 </template>
 
-<script setup lang="ts">
-import { IonPage, IonContent } from '@ionic/vue';
+<script lang="ts">
+import { defineComponent } from "vue";
+import { IonPage, IonContent, IonList, IonItem, IonLabel, IonBadge } from "@ionic/vue";
+import ToolBar from "@/components/ToolBar.vue";
+
+export default defineComponent({
+  name: "RankingPage",
+  components: {
+    IonPage,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonBadge,
+    ToolBar,
+  },
+  data() {
+    return {
+      ranking: [
+        { id: 1, name: "João", points: 25 },
+        { id: 2, name: "Maria", points: 18 },
+        { id: 3, name: "Carlos", points: 15 },
+        { id: 4, name: "Ana", points: 12 },
+        { id: 5, name: "Pedro", points: 10 },
+      ],
+    };
+  },
+});
 </script>
 
 <style scoped>
 #container {
   text-align: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  margin-top: 20px;
 }
 
 #container strong {
@@ -27,14 +75,8 @@ import { IonPage, IonContent } from '@ionic/vue';
   line-height: 26px;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  color: #8c8c8c;
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
+.ranking-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 </style>
