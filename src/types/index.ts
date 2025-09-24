@@ -17,7 +17,6 @@ export interface PontoRisco {
 export interface NovoPontoRisco {
   tipo?: TipoRisco;
   coordenadas?: Coordenadas;
-  descricao?: string;
 }
 
 export interface PerfilUsuario {
