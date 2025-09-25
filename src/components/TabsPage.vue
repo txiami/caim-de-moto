@@ -5,11 +5,11 @@
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="mapa" href="/tabs/mapa">
-          <ion-icon aria-hidden="true" :icon="triangle" />
+          <ion-img src="@/assets/mapa.png" class="tab-icon" />
           <ion-label>Mapa</ion-label>
         </ion-tab-button>
-        <ion-tab-button tab="Ranking" href="/tabs/Ranking">
-          <ion-icon aria-hidden="true" :icon="square" />
+        <ion-tab-button tab="ranking" href="/tabs/ranking">
+          <ion-img src="@/assets/ranking.png" class="tab-icon" />
           <ion-label>Ranking</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
@@ -18,6 +18,14 @@
 </template>
 
 <script setup lang="ts">
-import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import {square, triangle } from 'ionicons/icons';
+import {
+  IonTabBar,
+  IonTabButton,
+  IonTabs,
+  IonLabel,
+  IonIcon,
+  IonPage,
+  IonRouterOutlet,
+} from "@ionic/vue";
+import { square, triangle } from "ionicons/icons";
 </script>
