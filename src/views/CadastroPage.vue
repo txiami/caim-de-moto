@@ -11,7 +11,7 @@
 
     <ion-content class="ion-padding">
       <div class="ion-text-center ion-margin-bottom">
-        <ion-img src="/assets/icons/Logo.svg" alt="Logo" class="logo"></ion-img>
+         <img src="@/assets/icon-logo.png" class="tab-icon" />
       </div>
 
       <!-- Loading spinner -->
@@ -335,10 +335,29 @@ export default {
 </script>
 
 <style scoped>
-.logo {
-  width: 120px;
-  height: auto;
-  margin: 0 auto;
+
+ion-input{
+  color: var(--preto-carvao);
+}
+
+ion-buttons {
+  color: var(--preto-carvao);
+}
+
+ion-title{
+  color: var(--preto-carvao);
+}
+
+ion-content {
+  --background: var(--branco);          
+}
+
+.tab-icon {
+  width: 100px;     
+  height: 100px;
+  object-fit: contain; 
+  margin-top: 5px;
+  margin-bottom: 2px;  
 }
 
 .ion-invalid {
