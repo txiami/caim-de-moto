@@ -7,3 +7,6 @@
   --cinza-medio: #F5F3EC;
 }
 
+ion-header {
+  padding-top: env(safe-area-inset-top) !important;
+}
