@@ -101,13 +101,13 @@
       </ion-fab>
 
       <div class="map-info" v-if="!carregando && centroMapa">
-        <ion-chip color="medium" outline>
-          <ion-icon :icon="iconeLocalizacao"></ion-icon>
-          <ion-label>{{ formatarCoordenadas(centroMapa) }}</ion-label>
-        </ion-chip>
-        <ion-chip color="primary" outline v-if="pontosFiltrados.length > 0">
-          <ion-label>{{ pontosFiltrados.length }} pontos visíveis</ion-label>
-        </ion-chip>
+<!--        <ion-chip color="medium" outline>-->
+<!--          <ion-icon :icon="iconeLocalizacao"></ion-icon>-->
+<!--          <ion-label>{{ formatarCoordenadas(centroMapa) }}</ion-label>-->
+<!--        </ion-chip>-->
+<!--        <ion-chip color="primary" outline v-if="pontosFiltrados.length > 0">-->
+<!--          <ion-label>{{ pontosFiltrados.length }} pontos visíveis</ion-label>-->
+<!--        </ion-chip>-->
       </div>
     </ion-content>
   </ion-page>
@@ -759,7 +759,7 @@ ion-title {
 }
 .map-info {
   position: absolute;
-  top: 100px;
+  bottom: 100px;
   left: 16px;
   right: 16px;
   display: flex;
