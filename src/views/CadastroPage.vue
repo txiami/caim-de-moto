@@ -262,7 +262,6 @@ export default {
         );
         
         const user = userCredential.user;
-        console.log('Usuário criado no Authentication:', user.uid);
 
         // 2. Atualizar o perfil do usuário com o nome
         await updateProfile(user, {
@@ -274,8 +273,7 @@ export default {
 
         // 4. Sucesso
         await this.showToast('Cadastro realizado com sucesso!');
-        console.log('Usuário cadastrado com sucesso!');
-        
+
         // Redirecionar para login
         this.$router.push('/login');
 
@@ -298,7 +296,6 @@ export default {
           ultimaAtualizacao: serverTimestamp()
         });
         
-        console.log('Perfil criado no Firestore para usuário:', userId);
       } catch (error) {
         console.error('Erro ao criar perfil no Firestore:', error);
         throw error; // Re-throw para ser capturado pelo método principal

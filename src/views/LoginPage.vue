@@ -22,10 +22,10 @@
           <ion-col size="12">
             <ion-input
               v-model="email"
-              label="Login"
+              label="Email"
               label-placement="floating"
               fill="outline"
-              placeholder="Digite seu login"
+              placeholder="Digite seu email"
               class="ion-margin-top"
             ></ion-input>
           </ion-col>
@@ -114,12 +114,11 @@ const login = async () => {
       email.value,
       senha.value
     );
-    console.log("Usuário logado:", userCredential.user);
     alert("Login realizado com sucesso!");
     router.push("/tabs/mapa"); // rota pós-login
   } catch (error) {
     console.error(error);
-    alert(error.message);
+    alert("Verifique seu email e senha e tente novamente.");
   }
 };
 </script>

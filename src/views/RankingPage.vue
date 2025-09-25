@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ToolBar />
+    <ToolBar title="RANKING" />
     <ion-content :fullscreen="true" class="ranking-content">
       <ion-grid class="ion-padding-top">
         <ion-row

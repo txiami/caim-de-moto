@@ -5,10 +5,10 @@
         <img src="@/assets/icon-logo.png" class="tab-icon" />
       </ion-buttons>
       <ion-buttons slot="end">
-        <ion-button v-if="!user" @click="goToLogin">Entrar</ion-button>
-        <ion-button v-else @click="logout">Sair</ion-button>
+        <ion-button color="success" v-if="!user" @click="goToLogin">Entrar</ion-button>
+        <ion-button color="danger" v-else @click="logout">Sair</ion-button>
       </ion-buttons>
-      <div class="toolbar-title-center">RANKING</div>
+      <div class="toolbar-title-center">{{ title }}</div>
     </ion-toolbar>
   </ion-header>
 </template>
@@ -23,6 +23,9 @@ export default {
     return {
       user: null,
     };
+  },
+  props:{
+    title: String,
   },
   methods: {
     goToLogin() {

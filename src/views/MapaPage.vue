@@ -1,55 +1,6 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <div class="header-top">
-        <img src="@/assets/icon-logo.png" class="tab-icon" />
-        <ion-title>Mapa de Riscos</ion-title>
-        <ion-buttons slot="end">
-          <ion-chip
-            :color="usuarioLogado ? 'success' : 'danger'"
-            outline
-            style="margin-right: 8px"
-          >
-            <ion-icon
-              :icon="usuarioLogado ? checkmarkCircle : closeCircle"
-              style="margin-right: 4px"
-            ></ion-icon>
-            <ion-label style="font-size: 12px">
-              {{
-                usuarioLogado
-                  ? usuarioLogado.displayName || usuarioLogado.email || "Logado"
-                  : "Não logado"
-              }}
-            </ion-label>
-          </ion-chip>
-        </ion-buttons>
-      </div>
-      <div class="search-wrapper">
-        <div class="search-container">
-          <ion-searchbar
-            v-model="buscaTexto"
-            placeholder="Digite um endereço"
-            :debounce="configUI.tempoDebounce"
-            @ionInput="buscaDebounce"
-            @keyup.enter="realizarBusca"
-            @ionClear="sugestoes = []"
-            style="--color: black"
-            autocomplete="off"
-            autocorrect="off"
-          />
-          <ion-button
-            fill="solid"
-            color="primary"
-            @click="realizarBusca"
-            :disabled="!buscaTexto.trim() || buscando"
-          >
-            <ion-spinner v-if="buscando" name="crescent"></ion-spinner>
-            <ion-icon v-else :icon="buscar"></ion-icon>
-          </ion-button>
-        </div>
-      </div>
-    </ion-header>
-
+    <ToolBar title="Mapa de Riscos" />
     <ion-content :fullscreen="true" ref="contentRef" :scroll-events="true">
       <!-- Alerta para usuários não logados -->
       <ion-card v-if="!usuarioLogado && !carregando" class="login-alert">
@@ -76,8 +27,8 @@
         </ion-card-content>
       </ion-card>
 
-      <div class="search-wrapper">
-        <!-- <div class="search-container">
+      <div class="search-wrapper" slot="fixed">
+         <div class="search-container">
           <ion-searchbar
             v-model="buscaTexto"
             placeholder="Digite um endereço"
@@ -99,7 +50,7 @@
             <ion-spinner v-if="buscando" name="crescent"></ion-spinner>
             <ion-icon v-else :icon="buscar"></ion-icon>
           </ion-button>
-        </div> -->
+        </div>
 
         <ion-list v-if="sugestoes.length > 0" class="suggestions-list">
           <ion-item
@@ -132,7 +83,6 @@
         vertical="bottom"
         horizontal="end"
         slot="fixed"
-        style="margin-bottom: 125px"
       >
         <ion-fab-button @click="obterLocalizacaoAtual">
           <img src="@/assets/localizacao.png" class="tab-icon" />
@@ -140,7 +90,7 @@
       </ion-fab>
 
       <!-- FAB com indicação visual para usuários não logados -->
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab vertical="bottom" horizontal="center" slot="fixed">
         <ion-fab-button
           @click="adicionarMarcadorTeste"
           :disabled="carregando"
@@ -174,14 +124,8 @@ import {
 } from "vue";
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
-  IonSearchbar,
-  IonButton,
   IonIcon,
-  IonButtons,
   IonSpinner,
   IonFab,
   IonFabButton,
@@ -192,6 +136,8 @@ import {
   IonList,
   IonItem,
   IonCard,
+  IonSearchbar,
+  IonButton,
   IonCardContent,
 } from "@ionic/vue";
 import {
@@ -221,6 +167,7 @@ import type {
   OpcoesMensagem,
 } from "@/types";
 import { GeoPoint } from "firebase/firestore";
+import ToolBar from "@/components/ToolBar.vue";
 
 const servicoMapa = new MapaService();
 const servicoLocalizacao = new LocalizacaoService();
@@ -391,7 +338,6 @@ const alterarFiltro = () => {
   }));
 
   servicoMapa.adicionarMarcadoresRisco(pontosConvertidos);
-  console.log(`Exibindo ${pontosConvertidos.length} pontos no mapa`);
 };
 
 // FUNÇÃO CORRIGIDA: Verificar login antes de adicionar
@@ -530,15 +476,11 @@ const adicionarNovoPonto = async (
   }
 };
 
-// FUNÇÃO CORRIGIDA: Carregar e exibir pontos no mapa automaticamente
 const carregarPontosRisco = async () => {
   try {
-    console.log("Carregando pontos do banco...");
+    console.log('Carregando pontos do banco...');
     pontosRisco.value = await buscarTodosPontosRisco();
-    console.log(
-      `${pontosRisco.value.length} pontos carregados:`,
-      pontosRisco.value
-    );
+    console.log(`${pontosRisco.value.length} pontos carregados:`, pontosRisco.value);
 
     // Aguardar um momento para garantir que o mapa está pronto
     await nextTick();
@@ -548,19 +490,18 @@ const carregarPontosRisco = async () => {
 
     await exibirToast({
       mensagem: `📌 ${pontosRisco.value.length} pontos carregados no mapa`,
-      cor: "success",
-      duracao: configUI.duracaoMensagem.curta,
+      cor: 'success',
+      duracao: configUI.duracaoMensagem.curta
     });
   } catch (erro) {
-    console.error("Erro ao carregar pontos:", erro);
+    console.error('Erro ao carregar pontos:', erro);
     await exibirToast({
-      mensagem: "❌ Erro ao carregar pontos do mapa",
-      cor: "danger",
+      mensagem: '❌ Erro ao carregar pontos do mapa',
+      cor: 'danger'
     });
   }
 };
 
-// Watch para reagir a mudanças nos pontos e reexibir no mapa
 watch(
   pontosRisco,
   () => {
@@ -636,16 +577,19 @@ onBeforeUnmount(async () => {
   gap: 2px;
   padding: 12px 12px 2px;
 }
+:deep(.gm-bundled-control) {
+  display: none !important;
+}
 
 .header-top img.tab-icon {
-  width: 45px !important;     
+  width: 45px !important;
   height: 45px !important;
   max-width: none !important;
   max-height: none !important;
 }
 
 .header-top ion-title {
-  margin: 0;            
+  margin: 0;
   font-size: 22px;
   font-weight: 700;
   color: var(--preto-carvao);
@@ -670,14 +614,14 @@ ion-toolbar::after {
 .search-wrapper {
   position: relative;
   z-index: 10;
-  padding: 0 6px 5px;  
+  padding: 0 6px 5px;
 }
 
 .search-container {
   display: flex;
   align-items: center;
   gap: 2px;
-  padding: 0;                    
+  padding: 0;
   background: transparent !important;
   border-bottom: none !important;
 }
@@ -799,7 +743,7 @@ ion-title {
 }
 .map-info {
   position: absolute;
-  bottom: 100px;
+  top: 100px;
   left: 16px;
   right: 16px;
   display: flex;

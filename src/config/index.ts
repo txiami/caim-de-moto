@@ -15,8 +15,8 @@ for (const varEnv of variaveisObrigatorias) {
 export const configMapa: ConfigMapa = {
   chaveApi: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
   localizacaoPadrao: {
-    lat: parseFloat(import.meta.env.VITE_DEFAULT_LOCATION_LAT) || -23.5505,
-    lng: parseFloat(import.meta.env.VITE_DEFAULT_LOCATION_LNG) || -46.6333
+    lat: parseFloat(import.meta.env.VITE_DEFAULT_LOCATION_LAT) || -12.891397,
+    lng: parseFloat(import.meta.env.VITE_DEFAULT_LOCATION_LNG) || -38.31521
   },
   zoomPadrao: 12,
   bibliotecas: ['places']
