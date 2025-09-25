@@ -513,6 +513,7 @@ watch(
 // LISTENER DE CLIQUE CORRIGIDO: Verificar login e mostrar dialog
 onMounted(async () => {
   await nextTick();
+  await solicitarGPS();
   await inicializar();
   await carregarPontosRisco();
 
@@ -562,6 +563,21 @@ onMounted(async () => {
     await alert.present();
   });
 });
+
+async function solicitarGPS() {
+  try {
+    const perm = await Geolocation.requestPermissions();
+    if (perm.location === "granted") {
+      console.log("GPS liberado 👍");
+      const position = await Geolocation.getCurrentPosition();
+      console.log("Coordenadas:", position.coords);
+    } else {
+      console.log("Permissão de GPS negada");
+    }
+  } catch (err) {
+    console.error("Erro solicitando GPS:", err);
+  }
+}
 
 onBeforeUnmount(async () => {
   servicoMapa.destruir();
