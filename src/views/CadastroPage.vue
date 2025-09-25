@@ -11,7 +11,7 @@
 
     <ion-content class="ion-padding">
       <div class="ion-text-center ion-margin-bottom">
-        <ion-img src="/assets/icons/Logo.svg" alt="Logo" class="logo"></ion-img>
+         <img src="@/assets/icon-logo.png" class="tab-icon" />
       </div>
 
       <!-- Loading spinner -->
@@ -262,7 +262,6 @@ export default {
         );
         
         const user = userCredential.user;
-        console.log('Usuário criado no Authentication:', user.uid);
 
         // 2. Atualizar o perfil do usuário com o nome
         await updateProfile(user, {
@@ -274,8 +273,7 @@ export default {
 
         // 4. Sucesso
         await this.showToast('Cadastro realizado com sucesso!');
-        console.log('Usuário cadastrado com sucesso!');
-        
+
         // Redirecionar para login
         this.$router.push('/login');
 
@@ -298,7 +296,6 @@ export default {
           ultimaAtualizacao: serverTimestamp()
         });
         
-        console.log('Perfil criado no Firestore para usuário:', userId);
       } catch (error) {
         console.error('Erro ao criar perfil no Firestore:', error);
         throw error; // Re-throw para ser capturado pelo método principal
@@ -335,10 +332,29 @@ export default {
 </script>
 
 <style scoped>
-.logo {
-  width: 120px;
-  height: auto;
-  margin: 0 auto;
+
+ion-input{
+  color: var(--preto-carvao);
+}
+
+ion-buttons {
+  color: var(--preto-carvao);
+}
+
+ion-title{
+  color: var(--preto-carvao);
+}
+
+ion-content {
+  --background: var(--branco);          
+}
+
+.tab-icon {
+  width: 100px;     
+  height: 100px;
+  object-fit: contain; 
+  margin-top: 5px;
+  margin-bottom: 2px;  
 }
 
 .ion-invalid {

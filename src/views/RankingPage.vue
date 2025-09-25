@@ -1,39 +1,50 @@
 <template>
   <ion-page>
-    <ToolBar />
-    <ion-content :fullscreen="true">
+    <ToolBar title="RANKING" />
+    <ion-content :fullscreen="true" class="ranking-content">
       <ion-grid class="ion-padding-top">
-        <ion-row class="ion-justify-content-center ion-margin-bottom ion-margin-top">
+        <ion-row
+          class="ion-justify-content-center ion-margin-bottom ion-margin-top"
+        >
           <ion-col size="12" size-md="8" class="ion-text-center">
-            <strong class="ranking-title">Ranking</strong>
+            <!-- <strong class="ranking-title">Ranking</strong> -->
           </ion-col>
         </ion-row>
 
-        <!-- Loading simples -->
+        <!-- Loading -->
         <ion-row v-if="loading" class="ion-justify-content-center">
           <ion-col size="12" class="ion-text-center">
             <ion-spinner></ion-spinner>
           </ion-col>
         </ion-row>
 
+        <!-- Lista de usuários -->
         <ion-row v-else class="ion-justify-content-center">
           <ion-col size="12" size-md="8">
-            <ion-list>
-              <ion-item v-for="(user, index) in ranking" :key="user.id">
-                <ion-label>
-                  <h2>
-                    <span v-if="index === 0">🥇</span>
-                    <span v-else-if="index === 1">🥈</span>
-                    <span v-else-if="index === 2">🥉</span>
-                    {{ index + 1 }}º - {{ user.name }}
-                  </h2>
-                  <p>{{ user.points }} locais adicionados</p>
-                </ion-label>
-                <ion-badge slot="end" :color="getBadgeColor(index)">
-                  {{ user.points }}
-                </ion-badge>
-              </ion-item>
-            </ion-list>
+            <div
+              v-for="(user, index) in ranking"
+              :key="user.id"
+              class="ranking-card"
+            >
+              <!-- Ícone de usuário -->
+              <div class="ranking-avatar">
+                <img src="@/assets/user-icon.png" />
+              </div>
+
+              <!-- Nome + pontos -->
+              <div class="ranking-info">
+                <h2 class="ranking-name">{{ user.name }}</h2>
+                <p class="ranking-points">
+                  {{ user.points }} locais adicionados
+                </p>
+              </div>
+
+              <!-- Posição + troféu -->
+              <div class="ranking-position">
+                <img src="@/assets/trofeu-icon.png" class="trophy" />
+                <span>{{ index + 1 }}º</span>
+              </div>
+            </div>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -43,56 +54,44 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { IonPage, IonContent, IonList, IonItem, IonLabel, IonBadge, IonSpinner } from "@ionic/vue";
+import { IonPage, IonContent, IonSpinner, IonIcon } from "@ionic/vue";
 import ToolBar from "@/components/ToolBar.vue";
-import { db } from '@/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { db } from "@/firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 export default defineComponent({
   name: "RankingPage",
   components: {
     IonPage,
     IonContent,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonBadge,
     IonSpinner,
+    IonIcon,
     ToolBar,
   },
   data() {
     return {
       ranking: [],
-      loading: true
+      loading: true,
     };
   },
   async mounted() {
     await this.loadRanking();
   },
   methods: {
-    getBadgeColor(index: number) {
-      if (index === 0) return "warning";  // Ouro
-      if (index === 1) return "medium";   // Prata
-      if (index === 2) return "tertiary"; // Bronze
-      return "primary";
+    getTrophyColor(index: number) {
+      if (index === 0) return "gold";
+      if (index === 1) return "silver";
+      if (index === 2) return "bronze";
+      return "default";
     },
-
     async loadRanking() {
       try {
         this.loading = true;
-
-        console.log('Buscando pontos de risco...');
-
-        // Buscar todos os pontos de risco
-        const collectionRef = collection(db, 'pontos_de_risco');
+        const collectionRef = collection(db, "pontos_de_risco");
         const querySnapshot = await getDocs(collectionRef);
 
-        console.log(`Encontrados ${querySnapshot.size} pontos de risco`);
-
-        // Contar pontos por usuário
         const userCount = {};
-
-        querySnapshot.docs.forEach(doc => {
+        querySnapshot.docs.forEach((doc) => {
           const data = doc.data();
           const userId = data.usuario_id;
           const userName = data.nomeUsuario;
@@ -105,51 +104,82 @@ export default defineComponent({
           }
         });
 
-        console.log('Contagem por usuário:', userCount);
-
-        // Converter para array e ordenar
         this.ranking = Object.entries(userCount)
-            .map(([userId, userData]) => ({
-              id: userId,
-              name: userData.name,
-              points: userData.count
-            }))
-            .sort((a, b) => b.points - a.points) // Ordenar por pontos (decrescente)
-            .slice(0, 5); // Top 5
-
-        console.log('Ranking final:', this.ranking);
-
+          .map(([userId, userData]) => ({
+            id: userId,
+            name: userData.name,
+            points: userData.count,
+          }))
+          .sort((a, b) => b.points - a.points)
+          .slice(0, 10);
       } catch (error) {
-        console.error('Erro ao carregar ranking:', error);
-        // Fallback para dados estáticos se der erro
+        console.error("Erro ao carregar ranking:", error);
         this.ranking = [
           { id: 1, name: "João", points: 25 },
           { id: 2, name: "Maria", points: 18 },
           { id: 3, name: "Carlos", points: 15 },
-          { id: 4, name: "Ana", points: 12 },
-          { id: 5, name: "Pedro", points: 10 },
         ];
       } finally {
         this.loading = false;
       }
-    }
-  }
+    },
+  },
 });
 </script>
 
 <style scoped>
-#container {
-  text-align: center;
-  margin-top: 20px;
-}
-
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.ranking-content {
+  --background: var(--branco);
 }
 
 .ranking-title {
   font-size: 1.5rem;
   margin-bottom: 1rem;
+  color: var(--preto-carvao);
+}
+
+.ranking-card {
+  background: var(--branco);
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  padding: 14px;
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ranking-avatar img {
+  width: 40px;
+  height: 40px;
+  margin-right: 12px;
+}
+
+.ranking-info {
+  flex: 1;
+}
+.ranking-name {
+  margin: 0;
+  font-weight: bold;
+  color: var(--preto-carvao);
+  font-size: 1rem;
+}
+.ranking-points {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--azul-petroleo);
+}
+
+.ranking-position {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: var(--preto-carvao);
+}
+.trophy {
+  width: 30px;
+  height: 30px;
 }
 </style>

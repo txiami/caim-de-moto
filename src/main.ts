@@ -1,4 +1,7 @@
 import { createApp } from 'vue'
+import "@/theme/variables.css";
+import "@/theme/global.css";
+
 import App from './App.vue'
 import router from './router';
 
@@ -19,6 +22,8 @@ import '@ionic/vue/css/text-alignment.css';
 import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 /**
  * Ionic Dark Mode
@@ -33,6 +38,17 @@ import '@ionic/vue/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
+const fixStatusBar = async () => {
+  if (Capacitor.isNativePlatform()) {
+    try {
+      await StatusBar.setOverlaysWebView({ overlay: false });
+      await StatusBar.setBackgroundColor({ color: '#f5f5f5' });
+      await StatusBar.setStyle({ style: Style.Dark });
+    } catch (error) {
+      console.error('StatusBar error:', error);
+    }
+  }
+};
 
 const app = createApp(App)
   .use(IonicVue)
@@ -40,4 +56,5 @@ const app = createApp(App)
 
 router.isReady().then(() => {
   app.mount('#app');
+  fixStatusBar(); // Adicione apenas esta linha
 });

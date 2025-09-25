@@ -1,2 +1,12 @@
-/* For information on how to create your own theme, please see:
-http://ionicframework.com/docs/theming/ */
+:root {
+  --preto-carvao: #1A1A1A;
+  --laranja: #F29F05;
+  --branco: #FFFFFF;
+  --vermelho-queimado: #C14432;
+  --azul-petroleo: #1F3B73;
+  --cinza-medio: #F5F3EC;
+}
+
+ion-header {
+  padding-top: env(safe-area-inset-top) !important;
+}
